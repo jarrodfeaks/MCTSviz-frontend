@@ -37,10 +37,10 @@ const orgChart = {
   ],
 };
 
-const TreeView = () => {
+const TreeView = ({ tree }) => {
   return (
     // <div id="treeWrapper" style={{ width: '100%', height: '100%' }}>
-      <Tree data={orgChart} />
+      <Tree data={tree} />
     // </div>
   )
 }

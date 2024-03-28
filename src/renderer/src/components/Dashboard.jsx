@@ -5,11 +5,19 @@ import Sidebar from "./sidebar/Sidebar";
 
 const Dashboard = () => {
 
+  const [ tree, setTree ] = useState({});
+
+  const handleUpdateTree = (newTree) => {
+    setTree(newTree);
+  };
+
   return (
     <div className={styles.dashboard}>
-      <div className={styles.sidebar}><Sidebar /></div>
+      <div className={styles.sidebar}>
+        <Sidebar onUpdateTree={handleUpdateTree} />
+      </div>
       <div className={styles.mainContent}>
-        <TreeView />
+        <TreeView tree={tree} />
       </div>
     </div>
   );
