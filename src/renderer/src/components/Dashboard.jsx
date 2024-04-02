@@ -11,6 +11,10 @@ const Dashboard = () => {
     setTree(newTree);
   };
 
+  const handleNodeClick = (nodeData) => {
+    console.log("node was clicked");
+  }
+
   return (
     <div className={styles.dashboard}>
       <div className={styles.sidebar}>
