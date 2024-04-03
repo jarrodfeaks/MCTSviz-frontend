@@ -16,6 +16,8 @@ const Sidebar = ({ onUpdateTree }) => {
   };
 
   const handleIterateTree = async () => {
+    // iterations is the num of iterations to run
+    console.log(iterations);
     const res = await api.iterateTree();
     if (res.status === 200) {
       onUpdateTree(res.data);
@@ -26,16 +28,17 @@ const Sidebar = ({ onUpdateTree }) => {
     <>
       <div style={{ padding: "0.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
         <Button label="Create Tree" onClick={handleCreateTree} />
-        <Button label="Run Iteration" onClick={handleIterateTree} />
-        {/*<label htmlFor="iterations">Iterations to run</label>*/}
-        {/*<div className="p-inputgroup flex-1">*/}
-        {/*  <InputNumber*/}
-        {/*    id="iterations"*/}
-        {/*    value={iterations}*/}
-        {/*    onValueChange={(e) => setIterations(e.value)}*/}
-        {/*  />*/}
-        {/*  <Button label="Run" />*/}
-        {/*</div>*/}
+        {/*<Button label="Run Iteration" onClick={handleIterateTree} />*/}
+        <label htmlFor="iterations">Iterations to run</label>
+        <div className="p-inputgroup flex-1">
+          <InputNumber
+            id="iterations"
+            value={iterations}
+            min={1}
+            onChange={(e) => setIterations(e.value)}
+          />
+          <Button label="Run" onClick={handleIterateTree} disabled={!iterations} />
+        </div>
       </div>
     </>
   )
