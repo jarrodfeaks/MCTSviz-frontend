@@ -1,48 +1,71 @@
-import React from "react";
+import React, { useState } from "react";
 import Tree from "react-d3-tree";
+import TreeWrapper from "./TreeWrapper";
+import IconRotate from "../../assets/icons/IconRotate";
+import { Button } from "primereact/button";
 
 const orgChart = {
-  name: 'CEO',
+  name: "CEO",
   children: [
     {
-      name: 'Manager',
+      name: "Manager",
       attributes: {
-        department: 'Production',
+        department: "Production"
       },
       children: [
         {
-          name: 'Foreman',
+          name: "Foreman",
           attributes: {
-            department: 'Fabrication',
+            department: "Fabrication"
           },
           children: [
             {
-              name: 'Worker',
-            },
-          ],
+              name: "Worker"
+            }
+          ]
         },
         {
-          name: 'Foreman',
+          name: "Foreman",
           attributes: {
-            department: 'Assembly',
+            department: "Assembly"
           },
           children: [
             {
-              name: 'Worker',
-            },
-          ],
-        },
-      ],
-    },
-  ],
+              name: "Worker"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 };
 
 const TreeView = ({ tree }) => {
+
+  const [viewOrientation, setViewOrientation] = useState("horizontal");
+
+  const toggleViewOrientation = () => {
+    setViewOrientation((currentOrientation) =>
+      currentOrientation === "horizontal" ? "vertical" : "horizontal"
+    );
+  };
+
   return (
-    // <div id="treeWrapper" style={{ width: '100%', height: '100%' }}>
-      <Tree data={tree} />
+    <TreeWrapper>
+      <Tree data={tree} orientation={viewOrientation} />
+      <Button
+        className="control top-right"
+        style={{ padding: "0.25rem" }}
+        tooltip={`Switch to ${viewOrientation === "horizontal" ? "vertical" : "horizontal"} orientation`}
+        tooltipOptions={{ position: "left", style: { fontSize: "0.9rem" } }}
+        outlined
+        raised
+        icon={IconRotate}
+        onClick={toggleViewOrientation}
+      />
+    </TreeWrapper>
     // </div>
-  )
-}
+  );
+};
 
 export default TreeView;

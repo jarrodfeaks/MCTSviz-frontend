@@ -26,7 +26,9 @@ const Sidebar = ({ onUpdateTree }) => {
 
   return (
     <>
-      <div style={{ padding: "0.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+      <div
+        style={{ padding: "1rem 0.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}
+      >
         <Button label="Create Tree" onClick={handleCreateTree} />
         {/*<Button label="Run Iteration" onClick={handleIterateTree} />*/}
         <label htmlFor="iterations">Iterations to run</label>
