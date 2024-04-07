@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Tree from "react-d3-tree";
 import TreeWrapper from "./TreeWrapper";
+import TreeViewInfoCard from "./TreeViewInfoCard";
 import IconRotate from "../../assets/icons/IconRotate";
 import { Button } from "primereact/button";
+import { Card } from "primereact/card";
 
 const orgChart = {
   name: "CEO",
@@ -40,8 +42,36 @@ const orgChart = {
   ]
 };
 
+const CustomNode = ({ nodeDatum, toggleNode, selectedNode, handleUpdateSelectedNode }) => {
+
+  const isLeaf = Boolean(!nodeDatum.children?.length);
+  const isSelected = selectedNode && nodeDatum.__rd3t.id === selectedNode.__rd3t.id;
+
+  const fillColor = isSelected ? (isLeaf ? "#C2DFFF" : "#5CABFF") : (isLeaf ? "#FFF" : "#CCC");
+  const strokeColor = isSelected ? (isLeaf ? "#116DD0" : "#0B488A") : "#222";
+
+  const handleNodeClick = () => {
+    handleUpdateSelectedNode(isSelected ? null : nodeDatum);
+  };
+
+  return (
+    <>
+      <g onClick={handleNodeClick} onContextMenu={toggleNode}>
+        <circle
+          className="node"
+          r={isSelected ? "18" : "15"}
+          stroke={strokeColor}
+          strokeWidth={isSelected ? "1.5" : "1"}
+          fill={fillColor}
+        />
+      </g>
+    </>
+  )
+};
+
 const TreeView = ({ tree }) => {
 
+  const [selectedNode, setSelectedNode] = useState(null);
   const [viewOrientation, setViewOrientation] = useState("horizontal");
 
   const toggleViewOrientation = () => {
@@ -50,11 +80,22 @@ const TreeView = ({ tree }) => {
     );
   };
 
+  const handleUpdateSelectedNode = (node) => {
+    setSelectedNode(node);
+  }
+
   return (
     <TreeWrapper>
-      <Tree data={tree} orientation={viewOrientation} />
+      <Tree
+        data={tree}
+        orientation={viewOrientation}
+        separation={{ siblings: 1, nonSiblings: 1 }}
+        renderCustomNodeElement={(props) => (
+          <CustomNode {...props} selectedNode={selectedNode} handleUpdateSelectedNode={handleUpdateSelectedNode} />
+        )}
+      />
       <Button
-        className="control top-right"
+        className="overlay top-right"
         style={{ padding: "0.25rem" }}
         tooltip={`Switch to ${viewOrientation === "horizontal" ? "vertical" : "horizontal"} orientation`}
         tooltipOptions={{ position: "left", style: { fontSize: "0.9rem" } }}
@@ -63,8 +104,12 @@ const TreeView = ({ tree }) => {
         icon={IconRotate}
         onClick={toggleViewOrientation}
       />
+      {selectedNode && (
+        <Card className="overlay top-left" title="Selected Node Attributes">
+          <TreeViewInfoCard node={selectedNode} />
+        </Card>
+      )}
     </TreeWrapper>
-    // </div>
   );
 };
 
