@@ -89,7 +89,7 @@ const TreeView = ({ tree }) => {
       <Tree
         data={tree}
         orientation={viewOrientation}
-        separation={{ siblings: 1, nonSiblings: 1 }}
+        separation={{ siblings: 0.1, nonSiblings: 0.1 }}
         renderCustomNodeElement={(props) => (
           <CustomNode {...props} selectedNode={selectedNode} handleUpdateSelectedNode={handleUpdateSelectedNode} />
         )}
