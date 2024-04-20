@@ -73,12 +73,18 @@ const TreeView = ({ tree }) => {
 
   const [selectedNode, setSelectedNode] = useState(null);
   const [viewOrientation, setViewOrientation] = useState("horizontal");
+  const [whiteSpaceToggle, setWhiteSpaceToggled] = useState(true);
 
   const toggleViewOrientation = () => {
     setViewOrientation((currentOrientation) =>
       currentOrientation === "horizontal" ? "vertical" : "horizontal"
     );
   };
+
+  const toggleWhiteSpace = () => {
+    setWhiteSpaceToggled((prev) => !prev);
+  };
+  const separation = whiteSpaceToggle ? {siblings: 0.1, nonSiblings: 0.1} : {siblings: 1, nonSiblings: 1};
 
   const handleUpdateSelectedNode = (node) => {
     setSelectedNode(node);
@@ -89,7 +95,7 @@ const TreeView = ({ tree }) => {
       <Tree
         data={tree}
         orientation={viewOrientation}
-        separation={{ siblings: 0.1, nonSiblings: 0.1 }}
+        separation={separation}
         renderCustomNodeElement={(props) => (
           <CustomNode {...props} selectedNode={selectedNode} handleUpdateSelectedNode={handleUpdateSelectedNode} />
         )}
@@ -103,6 +109,16 @@ const TreeView = ({ tree }) => {
         raised
         icon={IconRotate}
         onClick={toggleViewOrientation}
+      />
+      <Button
+        className="overlay bottom-right"
+        label="Change scale"
+        style={{ padding: "0.5rem" }}
+        tooltip={"Change scale of Tree"}
+        tooltipOptions={{ position: "left", style: { fontSize: "0.9rem" } }}
+        outlined
+        raised
+        onClick={toggleWhiteSpace}
       />
       {selectedNode && (
         <Card className="overlay top-left" title="Selected Node Attributes">
