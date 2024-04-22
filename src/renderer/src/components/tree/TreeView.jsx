@@ -72,7 +72,7 @@ const CustomNode = ({ nodeDatum, toggleNode, selectedNode, handleUpdateSelectedN
 const TreeView = ({ tree }) => {
 
   const [selectedNode, setSelectedNode] = useState(null);
-  const [viewOrientation, setViewOrientation] = useState("horizontal");
+  const [viewOrientation, setViewOrientation] = useState("vertical");
   const [whiteSpaceToggle, setWhiteSpaceToggled] = useState(true);
 
   const toggleViewOrientation = () => {
@@ -84,7 +84,7 @@ const TreeView = ({ tree }) => {
   const toggleWhiteSpace = () => {
     setWhiteSpaceToggled((prev) => !prev);
   };
-  const separation = whiteSpaceToggle ? {siblings: 0.1, nonSiblings: 0.1} : {siblings: 1, nonSiblings: 1};
+  const separation = whiteSpaceToggle ? {siblings: 0.1, nonSiblings: 0.2} : {siblings: 1, nonSiblings: 1};
 
   const handleUpdateSelectedNode = (node) => {
     setSelectedNode(node);
