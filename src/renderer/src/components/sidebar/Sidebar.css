@@ -1,0 +1,8 @@
+.p-divider-horizontal {
+  padding: 0.25rem 0;
+  margin-top: 0.25rem;
+}
+
+.p-divider-horizontal:before {
+  border-top-color: #AAAAAA;
+}

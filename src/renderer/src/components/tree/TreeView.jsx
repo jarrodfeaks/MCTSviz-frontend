@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Tree from "react-d3-tree";
 import TreeWrapper from "./TreeWrapper";
 import TreeViewInfoCard from "./TreeViewInfoCard";
 import IconRotate from "../../assets/icons/IconRotate";
+import D3TreeGraph from "./graphs/D3TreeGraph";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
+import OptionsContext from "../../OptionsContext";
 
 const orgChart = {
   name: "CEO",
@@ -71,6 +73,13 @@ const CustomNode = ({ nodeDatum, toggleNode, selectedNode, handleUpdateSelectedN
 
 const TreeView = ({ tree }) => {
 
+  const { options } = useContext(OptionsContext);
+
+  // const graphMap = {
+  //   tree: TreeGraph,
+  //   d3: D3TreeGraph
+  // }
+
   const [selectedNode, setSelectedNode] = useState(null);
   const [viewOrientation, setViewOrientation] = useState("horizontal");
 
@@ -86,14 +95,19 @@ const TreeView = ({ tree }) => {
 
   return (
     <TreeWrapper>
-      <Tree
-        data={tree}
-        orientation={viewOrientation}
-        separation={{ siblings: 1, nonSiblings: 1 }}
-        renderCustomNodeElement={(props) => (
-          <CustomNode {...props} selectedNode={selectedNode} handleUpdateSelectedNode={handleUpdateSelectedNode} />
-        )}
-      />
+      {options.graphType === "d3" && (
+        <D3TreeGraph data={tree} />
+      )}
+      {options.graphType === "tree" && (
+        <Tree
+          data={tree}
+          orientation={viewOrientation}
+          separation={{ siblings: 1, nonSiblings: 1 }}
+          renderCustomNodeElement={(props) => (
+            <CustomNode {...props} selectedNode={selectedNode} handleUpdateSelectedNode={handleUpdateSelectedNode} />
+          )}
+        />
+      )}
       <Button
         className="overlay top-right"
         style={{ padding: "0.25rem" }}

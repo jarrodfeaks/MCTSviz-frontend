@@ -1,11 +1,22 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
+import { Dropdown } from "primereact/dropdown";
+import { Divider } from 'primereact/divider';
 import api from "../../api/api";
+import "./Sidebar.css";
+import OptionsContext from "../../OptionsContext";
 
 const Sidebar = ({ onUpdateTree }) => {
 
   const [ iterations, setIterations ] = useState();
+
+  const { options, updateOptions } = useContext(OptionsContext);
+
+  const graphOptions = [
+    { label: "Tree", value: "tree" },
+    { label: "D3 Demo", value: "d3" }
+  ]
 
   const handleCreateTree = async () => {
     const res = await api.createTree();
@@ -16,9 +27,7 @@ const Sidebar = ({ onUpdateTree }) => {
   };
 
   const handleIterateTree = async () => {
-    // iterations is the num of iterations to run
-    console.log(iterations);
-    const res = await api.iterateTree();
+    const res = await api.iterateTree(iterations);
     if (res.status === 200) {
       onUpdateTree(res.data);
     }
@@ -41,6 +50,14 @@ const Sidebar = ({ onUpdateTree }) => {
           />
           <Button label="Run" onClick={handleIterateTree} disabled={!iterations} />
         </div>
+        <Divider />
+        <label htmlFor="dropdown">Visualisations</label>
+        <Dropdown
+          id="dropdown"
+          options={graphOptions}
+          value={options.graphType}
+          onChange={(e) => updateOptions({ graphType: e.value })}
+        />
       </div>
     </>
   )
