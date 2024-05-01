@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -28,6 +28,8 @@ const Sidebar = ({ onUpdateTree }) => {
     if (res.status === 200) {
       onUpdateTree(res.data);
     }
+    const res2 = await api.changeExploreExploit(0.5);
+    console.log(res2);
   };
 
   const handleIterateTree = async () => {
@@ -36,6 +38,14 @@ const Sidebar = ({ onUpdateTree }) => {
       onUpdateTree(res.data);
     }
   };
+
+  // useEffect(() => {
+  //   async function sendData() {
+  //     const res = await api.changeExploreExploit(exploreExploitParam);
+  //     console.log(res);
+  //   }
+  //   sendData();
+  // }, [exploreExploitParam]);
 
   return (
     <>
@@ -61,17 +71,17 @@ const Sidebar = ({ onUpdateTree }) => {
             min={0}
             max={1}
             step={0.02}
-            value={exploreExploitParam}
+            value={Number(exploreExploitParam)}
             onChange={(e) => setExploreExploitParam(e.value)}
           />
           </div>
-          <InputNumber
+          <InputText
             value={exploreExploitParam}
-            min={0}
-            max={1}
-            minFractionDigits={0}
-            maxFractionDigits={2}
-            allowEmpty={false}
+            // min={0}
+            // max={1}
+            // minFractionDigits={0}
+            // maxFractionDigits={2}
+            // allowEmpty={false}
             onChange={(e) => setExploreExploitParam(e.target.value)}
           />
         </div>
