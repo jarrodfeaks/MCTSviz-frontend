@@ -20,11 +20,11 @@
 .overlay.bottom-left { bottom: 0; left: 0; }
 .overlay.bottom-right { bottom: 0; right: 0; }
 
-circle {
+.circle-node, .rect-node {
   transition: filter 0.3s ease;
 }
 
-circle:hover {
+.circle-node:hover, .rect-node:hover {
   filter: brightness(95%);
 }
 

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Tree from "react-d3-tree";
 import TreeWrapper from "./TreeWrapper";
 import TreeViewInfoCard from "./TreeViewInfoCard";
@@ -7,6 +7,7 @@ import D3TreeGraph from "./graphs/D3TreeGraph";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import OptionsContext from "../../OptionsContext";
+import LoadingOverlay from "../loadingOverlay/LoadingOverlay";
 
 const orgChart = {
   name: "CEO",
@@ -60,7 +61,7 @@ const CustomNode = ({ nodeDatum, toggleNode, selectedNode, handleUpdateSelectedN
     <>
       <g onClick={handleNodeClick} onContextMenu={toggleNode}>
         <circle
-          className="node"
+          className="circle-node"
           r={isSelected ? "18" : "15"}
           stroke={strokeColor}
           strokeWidth={isSelected ? "1.5" : "1"}
@@ -93,37 +94,43 @@ const TreeView = ({ tree }) => {
     setSelectedNode(node);
   }
 
+  useEffect(() => {
+    setSelectedNode(null);
+  }, [options.graphType]);
+
   return (
-    <TreeWrapper>
-      {options.graphType === "d3" && (
-        <D3TreeGraph data={tree} />
-      )}
-      {options.graphType === "tree" && (
-        <Tree
-          data={tree}
-          orientation={viewOrientation}
-          separation={{ siblings: 0.1, nonSiblings: 0.2 }}
-          renderCustomNodeElement={(props) => (
-            <CustomNode {...props} selectedNode={selectedNode} handleUpdateSelectedNode={handleUpdateSelectedNode} />
-          )}
+    <LoadingOverlay isLoading={options.isLoading}>
+      <TreeWrapper>
+        {options.graphType === "d3" && (
+          <D3TreeGraph data={tree} />
+        )}
+        {options.graphType === "tree" && (
+          <Tree
+            data={tree}
+            orientation={viewOrientation}
+            separation={{ siblings: 0.2, nonSiblings: 0.4 }}
+            renderCustomNodeElement={(props) => (
+              <CustomNode {...props} selectedNode={selectedNode} handleUpdateSelectedNode={handleUpdateSelectedNode} />
+            )}
+          />
+        )}
+        <Button
+          className="overlay top-right"
+          style={{ padding: "0.25rem" }}
+          tooltip={`Switch to ${viewOrientation === "horizontal" ? "vertical" : "horizontal"} orientation`}
+          tooltipOptions={{ position: "left", style: { fontSize: "0.9rem" } }}
+          outlined
+          raised
+          icon={IconRotate}
+          onClick={toggleViewOrientation}
         />
-      )}
-      <Button
-        className="overlay top-right"
-        style={{ padding: "0.25rem" }}
-        tooltip={`Switch to ${viewOrientation === "horizontal" ? "vertical" : "horizontal"} orientation`}
-        tooltipOptions={{ position: "left", style: { fontSize: "0.9rem" } }}
-        outlined
-        raised
-        icon={IconRotate}
-        onClick={toggleViewOrientation}
-      />
-      {selectedNode && (
-        <Card className="overlay top-left" title="Selected Node Attributes">
-          <TreeViewInfoCard node={selectedNode} />
-        </Card>
-      )}
-    </TreeWrapper>
+        {selectedNode && (
+          <Card className="overlay top-left" title="Selected Node Attributes">
+            <TreeViewInfoCard node={selectedNode} />
+          </Card>
+        )}
+      </TreeWrapper>
+    </LoadingOverlay>
   );
 };
 

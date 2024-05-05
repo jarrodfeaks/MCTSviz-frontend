@@ -1,7 +1,9 @@
 import { createContext } from "react";
 
 const defaultOptions = {
-  graphType: "tree"
+  graphType: "tree",
+  isLoading: false,
+  enableFilter: false,
 };
 
 const OptionsContext = createContext(defaultOptions);

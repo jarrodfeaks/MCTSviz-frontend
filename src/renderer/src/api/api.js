@@ -9,7 +9,7 @@ const iterateTree = async (iterations) => {
 };
 
 const changeExploreExploit = async (constant) => {
-  return axios.post("http://localhost:5000/api/eeconstant", { data: constant });
+  return axios.post("http://localhost:5000/api/tree/eeconstant", { data: constant });
 };
 
 export default { createTree, iterateTree, changeExploreExploit };

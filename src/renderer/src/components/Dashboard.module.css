@@ -12,6 +12,22 @@
 }
 
 .mainContent {
+  position: relative;
   width: 75%;
   height: 100%;
+}
+
+.welcomeOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #FAFAFA;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  color: #AAAAAA;
+  z-index: 10;
 }

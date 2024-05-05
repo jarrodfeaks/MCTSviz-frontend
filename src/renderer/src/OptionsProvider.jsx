@@ -3,7 +3,9 @@ import OptionsContext from "./OptionsContext";
 
 const OptionsProvider = ({ children }) => {
   const [options, setOptions] = useState({
-    graphType: "tree"
+    graphType: "tree",
+    isLoading: false,
+    enableFilter: false,
   });
 
   const updateOptions = (newOptions) => {
