@@ -26,7 +26,7 @@ const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
   const handleCreateTree = async () => {
     setIsCreatingTree(true);
     try {
-      const res = await api.createTree();
+      const res = await api.createTree("0");
       if (res.status === 200) onUpdateTree(res.data);
     } catch (err) {
       showToastMessage(
@@ -42,7 +42,7 @@ const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
   const handleIterateTree = async () => {
     updateOptions({ isLoading: true });
     try {
-      const res = await api.iterateTree(iterations);
+      const res = await api.iterateTree(iterations, exploreExploitParam);
       if (res.status === 200) onUpdateTree(res.data);
     } catch (err) {
       showToastMessage("error", "Error", err.message);

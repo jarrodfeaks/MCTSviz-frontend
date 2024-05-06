@@ -102,11 +102,11 @@ const TreeView = ({ tree }) => {
     <LoadingOverlay isLoading={options.isLoading}>
       <TreeWrapper>
         {options.graphType === "d3" && (
-          <D3TreeGraph data={tree} />
+          <D3TreeGraph data={tree?.tree || {}} />
         )}
         {options.graphType === "tree" && (
           <Tree
-            data={tree}
+            data={tree?.tree || {}}
             orientation={viewOrientation}
             separation={{ siblings: 0.2, nonSiblings: 0.4 }}
             renderCustomNodeElement={(props) => (

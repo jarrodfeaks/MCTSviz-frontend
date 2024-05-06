@@ -3,8 +3,9 @@ import React from "react";
 const TreeViewInfoCard = ({ node }) => {
 
   const renderBoard = (board) => {
+    if (!board) return null;
     return (
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "5px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gridTemplateRows: "repeat(3, 1fr)", gap: "5px" }}>
         {board.map((element, index) => (
           <div key={index} style={{ border: "1px solid black", padding: "5px" }}>
             {element}
@@ -23,7 +24,7 @@ const TreeViewInfoCard = ({ node }) => {
               <li key={index}><strong>{`${key}: `}</strong>{`${value}`}</li>
             ))}
           </ul>
-          {/*<div>{renderBoard(["o", "x", " ", "x", "o", "o", " ", " ", "x"])}</div>*/}
+          <div>{renderBoard(node.attributes.board)}</div>
         </>
       ) : (
         <div>No attributes found</div>
