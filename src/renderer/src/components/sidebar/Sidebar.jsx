@@ -91,11 +91,7 @@ const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
           </div>
           <InputText
             value={exploreExploitParam}
-            // min={0}
-            // max={1}
-            // minFractionDigits={0}
-            // maxFractionDigits={2}
-            // allowEmpty={false}
+            keyfilter="num"
             onChange={(e) => setExploreExploitParam(e.target.value)}
           />
         </div>

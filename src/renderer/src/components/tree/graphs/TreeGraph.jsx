@@ -1,18 +1,18 @@
 import React, { useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { Group } from '@visx/group';
-import { Tree, hierarchy } from '@visx/hierarchy';
+import { Group } from "@visx/group";
+import { Tree, hierarchy } from "@visx/hierarchy";
 import { LinkHorizontalStep } from "@visx/shape";
 import { Drag } from "@visx/drag";
 import OptionsContext from "../../../OptionsContext";
 
-const peach = '#fd9b93';
-const pink = '#fe6e9e';
-const blue = '#03c0dc';
-const green = '#26deb0';
-const plum = '#71248e';
-const lightpurple = '#374469';
-const white = '#ffffff';
-export const background = '#272b4d';
+const peach = "#fd9b93";
+const pink = "#fe6e9e";
+const blue = "#03c0dc";
+const green = "#26deb0";
+const plum = "#71248e";
+const lightpurple = "#374469";
+const white = "#ffffff";
+export const background = "#272b4d";
 
 function RootNode({ node }) {
   return (
@@ -23,7 +23,7 @@ function RootNode({ node }) {
         fontSize={9}
         fontFamily="Arial"
         textAnchor="middle"
-        style={{ pointerEvents: 'none' }}
+        style={{ pointerEvents: "none" }}
         fill={white}
       >
         {node.data.attributes.reward}
@@ -33,28 +33,35 @@ function RootNode({ node }) {
 }
 
 function ParentNode({ node, forceUpdate }) {
-
   const collapseNode = () => {
     node._children = node.children;
     node.children = null;
     forceUpdate();
-  }
+  };
 
   return (
     <Group top={node.x} left={node.y}>
-      <circle className="circle-node" r={12} fill={white} stroke={lightpurple} strokeWidth={1} onClick={collapseNode} cursor="pointer" />
+      <circle
+        className="circle-node"
+        r={12}
+        fill={white}
+        stroke={lightpurple}
+        strokeWidth={1}
+        onClick={collapseNode}
+        cursor="pointer"
+      />
       <text
         dy=".33em"
         fontSize={9}
         fontFamily="Arial"
         textAnchor="middle"
-        style={{ pointerEvents: 'none' }}
+        style={{ pointerEvents: "none" }}
         fill="#000000"
       >
         {node.data.attributes.reward}
       </text>
     </Group>
-  )
+  );
 }
 
 function CollapsedNode({ node, forceUpdate }) {
@@ -67,7 +74,7 @@ function CollapsedNode({ node, forceUpdate }) {
     node.children = node._children;
     node._children = null;
     forceUpdate();
-  }
+  };
 
   return (
     <Group top={node.x} left={node.y}>
@@ -93,7 +100,9 @@ function CollapsedNode({ node, forceUpdate }) {
         fill={"#000000"}
       >
         {node.data.attributes.reward}
-        <tspan dx={2} dy={1} fontSize={14}>{"»"}</tspan>
+        <tspan dx={2} dy={1} fontSize={14}>
+          {"»"}
+        </tspan>
       </text>
     </Group>
   );
@@ -121,7 +130,7 @@ function LeafNode({ node }) {
         {node.data.attributes.reward}
       </text>
     </Group>
-  )
+  );
 }
 
 /** Handles rendering Root, Parent, and other Nodes. */
@@ -130,28 +139,31 @@ function Node({ node, forceUpdate }) {
   const isParent = !!(node.children || node._children);
 
   if (isRoot) return <RootNode node={node} />;
-  if (isParent) return node.children ? <ParentNode node={node} forceUpdate={forceUpdate} /> : <CollapsedNode node={node} forceUpdate={forceUpdate} />;
-  return <LeafNode node={node} />
+  if (isParent)
+    return node.children ? (
+      <ParentNode node={node} forceUpdate={forceUpdate} />
+    ) : (
+      <CollapsedNode node={node} forceUpdate={forceUpdate} />
+    );
+  return <LeafNode node={node} />;
 }
 
-const defaultMargin = { top: 10, left: 80, right: 80, bottom: 10 };
-
-const TreeGraph = ({ data, margin = defaultMargin }) => {
-
+const TreeGraph = ({ data, width, height }) => {
   const treeData = useMemo(() => hierarchy(data), [data]);
 
   // hacky fix to update the tree quicker when expanding/collapsing nodes
   // react is very slow to re-render the tree otherwise
-  const [_, forceUpdate] = useReducer(x => x + 1, 0);
+  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
 
-  const containerRef = useRef(null);
-  const [size, setSize] = useState({ width: 0, height: 0 });
+  const margin = { top: 10, left: 80, right: 80, bottom: 10 };
 
   const rewardFilter = (node) => {
     if (!node.children || node.children.length === 0) return;
 
     // Find child nodes with their own children
-    const nodesWithChildren = node.children.filter(child => child.children && child.children.length > 0);
+    const nodesWithChildren = node.children.filter(
+      (child) => child.children && child.children.length > 0
+    );
     // Sort based on reward
     nodesWithChildren.sort((a, b) => a.data.attributes.reward - b.data.attributes.reward);
     const midpoint = Math.floor(nodesWithChildren.length / 2);
@@ -161,12 +173,12 @@ const TreeGraph = ({ data, margin = defaultMargin }) => {
 
     bottomHalf.forEach(collapseNode);
     topHalf.forEach(rewardFilter);
-  }
+  };
 
   const collapseNode = (node) => {
     node._children = node.children;
     node.children = null;
-  }
+  };
 
   const { options, updateOptions } = useContext(OptionsContext);
 
@@ -175,32 +187,10 @@ const TreeGraph = ({ data, margin = defaultMargin }) => {
       rewardFilter(treeData);
       updateOptions({ enableFilter: false });
     }
-  }, [options.enableFilter])
-
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
-      if (!entries || entries.length === 0) {
-        return;
-      }
-      const { width, height } = entries[0].contentRect;
-      setSize({ width, height });
-    });
-
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [containerRef]);
-
-  const { width, height } = size;
-  // const yMax = height - margin.top - margin.bottom;
-  // const xMax = width - margin.left - margin.right;
+  }, [options.enableFilter]);
 
   return (
-    <div ref={containerRef} style={{ width: "100%", height: "100%", overflow: "hidden" }}>
+    <>
       {width > 0 && height > 0 && (
         <Drag width={width} height={height}>
           {({ dragStart, dragEnd, dragMove, isDragging, x, y, dx, dy }) => (
@@ -213,22 +203,22 @@ const TreeGraph = ({ data, margin = defaultMargin }) => {
               <rect
                 width={width}
                 height={height}
-                // fill={"#fafafa"}
                 fill="url(#grid)"
                 onMouseUp={dragEnd}
                 onMouseMove={dragMove}
                 onMouseDown={dragStart}
                 onMouseLeave={dragEnd}
-                cursor={isDragging ? 'grabbing' : 'grab'}
+                cursor={isDragging ? "grabbing" : "grab"}
               />
-              <Tree root={treeData} nodeSize={[30, 60]} separation={(a, b) => {
-                return (a.parent === b.parent ? 1 : 1.5);
-              }}>
+              <Tree
+                root={treeData}
+                nodeSize={[30, 60]}
+                separation={(a, b) => {
+                  return a.parent === b.parent ? 1 : 1.5;
+                }}
+              >
                 {(tree) => (
-                  <Group
-                    top={margin.top + dy}
-                    left={margin.left + dx}
-                  >
+                  <Group top={margin.top + dy} left={margin.left + dx}>
                     {tree.links().map((link, i) => (
                       <LinkHorizontalStep
                         key={`link-${i}`}
@@ -247,8 +237,8 @@ const TreeGraph = ({ data, margin = defaultMargin }) => {
           )}
         </Drag>
       )}
-    </div>
+    </>
   );
-}
+};
 
 export default TreeGraph;
