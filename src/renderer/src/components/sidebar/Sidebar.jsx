@@ -116,7 +116,7 @@ const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
         </div>
         <Button
           label="Filter by reward"
-          disabled={options.graphType !== "d3"}
+          disabled={options.graphType !== "tree" || !isTreeCreated}
           onClick={() => updateOptions({ enableFilter: true })}
         />
       </div>
