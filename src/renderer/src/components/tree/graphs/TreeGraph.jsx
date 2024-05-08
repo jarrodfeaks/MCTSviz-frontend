@@ -136,7 +136,7 @@ function Node({ node, forceUpdate }) {
 
 const defaultMargin = { top: 10, left: 80, right: 80, bottom: 10 };
 
-const D3TreeGraph = ({ data, margin = defaultMargin }) => {
+const TreeGraph = ({ data, margin = defaultMargin }) => {
 
   const treeData = useMemo(() => hierarchy(data), [data]);
 
@@ -251,4 +251,4 @@ const D3TreeGraph = ({ data, margin = defaultMargin }) => {
   );
 }
 
-export default D3TreeGraph;
+export default TreeGraph;

@@ -1,6 +1,6 @@
 import React from "react";
 
-const TreeViewInfoCard = ({ node }) => {
+const TreeGraphLegacyInfoCard = ({ node }) => {
 
   const renderBoard = (board) => {
     if (!board) return null;
@@ -33,4 +33,4 @@ const TreeViewInfoCard = ({ node }) => {
   )
 }
 
-export default TreeViewInfoCard;
+export default TreeGraphLegacyInfoCard;

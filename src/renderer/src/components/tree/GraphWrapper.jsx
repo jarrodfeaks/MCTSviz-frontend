@@ -1,7 +1,7 @@
 import React from "react";
-import "./TreeWrapper.css";
+import "./GraphWrapper.css";
 
-const TreeWrapper = ({ children }) => {
+const GraphWrapper = ({ children }) => {
   return (
     <div className="treeWrapper">
       {children}
@@ -9,4 +9,4 @@ const TreeWrapper = ({ children }) => {
   );
 };
 
-export default TreeWrapper;
+export default GraphWrapper;

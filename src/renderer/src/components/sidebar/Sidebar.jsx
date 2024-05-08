@@ -20,7 +20,8 @@ const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
 
   const graphOptions = [
     { label: "Tree", value: "tree" },
-    { label: "D3 Tree", value: "d3" }
+    { label: "Tree (Legacy)", value: "treeLegacy" },
+    { label: "Radial", value: "radial" }
   ];
 
   const handleCreateTree = async () => {
@@ -50,14 +51,6 @@ const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
       updateOptions({ isLoading: false });
     }
   };
-
-  // useEffect(() => {
-  //   async function sendData() {
-  //     const res = await api.changeExploreExploit(exploreExploitParam);
-  //     console.log(res);
-  //   }
-  //   sendData();
-  // }, [exploreExploitParam]);
 
   return (
     <>

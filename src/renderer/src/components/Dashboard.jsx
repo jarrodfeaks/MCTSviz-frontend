@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import styles from "./Dashboard.module.css";
-import TreeView from "./tree/TreeView";
+import GraphView from "./tree/GraphView";
 import Sidebar from "./sidebar/Sidebar";
 import { Toast } from "primereact/toast";
 
@@ -32,7 +32,7 @@ const Dashboard = () => {
             <span>Create a tree to get started.</span>
           </div>
         )}
-        <TreeView tree={tree} />
+        <GraphView tree={tree} />
       </div>
     </div>
   );
