@@ -8,6 +8,8 @@ import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import OptionsContext from "../../OptionsContext";
 import LoadingOverlay from "../loadingOverlay/LoadingOverlay";
+import D3RadGraph from "./graphs/D3RadGraph";
+
 
 const orgChart = {
   name: "CEO",
@@ -103,6 +105,9 @@ const TreeView = ({ tree }) => {
       <TreeWrapper>
         {options.graphType === "d3" && (
           <D3TreeGraph data={tree?.tree || {}} />
+        )}
+        {options.graphType === "pol" && (
+          <D3RadGraph data={tree?.tree || {}} />
         )}
         {options.graphType === "tree" && (
           <Tree

@@ -20,7 +20,8 @@ const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
 
   const graphOptions = [
     { label: "Tree", value: "tree" },
-    { label: "D3 Tree", value: "d3" }
+    { label: "D3 Tree", value: "d3" },
+    {label: "D3 Polar", value: 'Pol'}
   ];
 
   const handleCreateTree = async () => {
