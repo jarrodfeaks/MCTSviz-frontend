@@ -153,7 +153,7 @@ const D3TreeGraph = ({ data, margin = defaultMargin }) => {
     // Find child nodes with their own children
     const nodesWithChildren = node.children.filter(child => child.children && child.children.length > 0);
     // Sort based on reward
-    nodesWithChildren.sort((a, b) => a.reward - b.reward);
+    nodesWithChildren.sort((a, b) => a.data.attributes.reward - b.data.attributes.reward);
     const midpoint = Math.floor(nodesWithChildren.length / 2);
 
     const bottomHalf = nodesWithChildren.slice(0, midpoint);
