@@ -52,7 +52,7 @@ const TreeGraphLegacy = ({ data }) => {
       <Tree
         data={data}
         orientation={viewOrientation}
-        separation={{ siblings: 0.2, nonSiblings: 0.4 }}
+        separation={{ siblings: 0.1, nonSiblings: 0.2 }}
         renderCustomNodeElement={(props) => (
           <CustomNode
             {...props}

@@ -78,8 +78,8 @@ const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
         <div className="slider-group">
           <div className="slider-control">
             <div className="slider-labels">
-              <span>Explore</span>
               <span>Exploit</span>
+              <span>Explore</span>
             </div>
             <Slider
               min={0}
