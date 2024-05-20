@@ -8,11 +8,14 @@ import { Slider } from "primereact/slider";
 import api from "../../api/api";
 import "./Sidebar.css";
 import OptionsContext from "../../OptionsContext";
+import TreeOptions from "../tree/graphs/graphOptions/TreeOptions";
 
 const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
   const [isCreatingTree, setIsCreatingTree] = useState(false);
 
   const [iterations, setIterations] = useState();
+
+  const [seed, setSeed] = useState();
 
   const [exploreExploitParam, setExploreExploitParam] = useState(0.5);
 
@@ -24,10 +27,16 @@ const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
     { label: "Radial", value: "radial" }
   ];
 
+  const graphControls = {
+    tree: TreeOptions,
+  };
+
+  const GraphControlComponent = graphControls[options.graphType];
+
   const handleCreateTree = async () => {
     setIsCreatingTree(true);
     try {
-      const res = await api.createTree("0");
+      const res = await api.createTree(seed);
       if (res.status === 200) onUpdateTree(res.data);
     } catch (err) {
       showToastMessage(
@@ -44,6 +53,7 @@ const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
     updateOptions({ isLoading: true });
     try {
       const res = await api.iterateTree(iterations, exploreExploitParam);
+      console.log(res.data);
       if (res.status === 200) onUpdateTree(res.data);
     } catch (err) {
       showToastMessage("error", "Error", err.message);
@@ -95,6 +105,15 @@ const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
             onChange={(e) => setExploreExploitParam(e.target.value)}
           />
         </div>
+        <div className="seed-group">
+          <label className="control-label" htmlFor="seed">Seed</label>
+          <InputText
+            value={seed}
+            id="seed"
+            placeholder="e.g. 1234"
+            onChange={(e) => setSeed(e.target.value)}
+          />
+        </div>
         <Divider />
         <h1 className="sidebar-heading">Visualisation Options</h1>
         <div style={{ marginTop: "-0.5rem" }}>
@@ -110,11 +129,7 @@ const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
             />
           </div>
         </div>
-        <Button
-          label="Filter by reward"
-          disabled={options.graphType !== "tree" || !isTreeCreated}
-          onClick={() => updateOptions({ enableFilter: true })}
-        />
+        {GraphControlComponent && <GraphControlComponent />}
       </div>
     </>
   );

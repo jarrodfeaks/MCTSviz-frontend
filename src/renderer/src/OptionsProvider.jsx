@@ -5,17 +5,32 @@ const OptionsProvider = ({ children }) => {
   const [options, setOptions] = useState({
     graphType: "tree",
     isLoading: false,
-    enableFilter: false,
+    treeOptions: {
+      size: "normal",
+      filterTarget: "reward",
+      filterValue: 50,
+      filterType: "highlight",
+      applyFilter: false,
+      clearFilters: false
+    },
   });
 
   const updateOptions = (newOptions) => {
     setOptions((prevOptions) => ({ ...prevOptions, ...newOptions }));
   };
 
+  const setGraphTypeOption = (type, key, value) => {
+    setOptions((prevOptions) => ({
+      ...prevOptions,
+      [`${type}Options`]: {
+        ...prevOptions[`${type}Options`],
+        [key]: value
+      }
+    }));
+  };
+
   return (
-    <OptionsContext.Provider value={{ options, updateOptions }}>
-      {children}
-    </OptionsContext.Provider>
+    <OptionsContext.Provider value={{ options, updateOptions, setGraphTypeOption }}>{children}</OptionsContext.Provider>
   );
 };
 

@@ -3,7 +3,14 @@ import { createContext } from "react";
 const defaultOptions = {
   graphType: "tree",
   isLoading: false,
-  enableFilter: false,
+  treeOptions: {
+    size: "normal",
+    filterTarget: "reward",
+    filterValue: 50,
+    filterType: "highlight",
+    applyFilter: false,
+    clearFilters: false,
+  },
 };
 
 const OptionsContext = createContext(defaultOptions);

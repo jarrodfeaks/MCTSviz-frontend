@@ -1,23 +1,34 @@
-import React, { useContext, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useReducer, useState } from "react";
 import { Group } from "@visx/group";
 import { Tree, hierarchy } from "@visx/hierarchy";
 import { LinkHorizontalStep } from "@visx/shape";
 import { Drag } from "@visx/drag";
 import OptionsContext from "../../../OptionsContext";
 
-const peach = "#fd9b93";
-const pink = "#fe6e9e";
-const blue = "#03c0dc";
-const green = "#26deb0";
-const plum = "#71248e";
-const lightpurple = "#374469";
 const white = "#ffffff";
-export const background = "#272b4d";
 
-function RootNode({ node }) {
+const NODE_RADIUS_NORMAL = 12;
+const NODE_RADIUS_COMPACT = 3;
+
+const NODE_PURPLE_FILL = "#272b4d";
+const NODE_PURPLE_STROKE = "#374469";
+const NODE_GREY_FILL = "#A2A8B9";
+const NODE_PINK_FILL = "#fe6e9e";
+const NODE_PINK_FILL_DIMMED = "#f9c5bb";
+const NODE_VIOLET_FILL = "#525AA3";
+
+function RootNode({ node, isCompact }) {
+  if (isCompact) {
+    return (
+      <Group top={node.x} left={node.y}>
+        <circle className="circle-node" r={NODE_RADIUS_COMPACT + 1} fill={NODE_PURPLE_FILL} />
+      </Group>
+    );
+  }
+
   return (
     <Group top={node.x} left={node.y}>
-      <circle className="circle-node" r={12} fill={background} />
+      <circle className="circle-node" r={NODE_RADIUS_NORMAL} fill={NODE_PURPLE_FILL} />
       <text
         dy=".33em"
         fontSize={9}
@@ -32,20 +43,34 @@ function RootNode({ node }) {
   );
 }
 
-function ParentNode({ node, forceUpdate }) {
+function ParentNode({ node, isCompact, forceUpdate }) {
   const collapseNode = () => {
     node._children = node.children;
     node.children = null;
     forceUpdate();
   };
 
+  if (isCompact) {
+    return (
+      <Group top={node.x} left={node.y}>
+        <circle
+          className="circle-node"
+          r={NODE_RADIUS_COMPACT}
+          fill={node.highlight ? NODE_PINK_FILL : NODE_PURPLE_FILL}
+          onClick={collapseNode}
+          cursor="pointer"
+        />
+      </Group>
+    );
+  }
+
   return (
     <Group top={node.x} left={node.y}>
       <circle
         className="circle-node"
-        r={12}
-        fill={white}
-        stroke={lightpurple}
+        r={NODE_RADIUS_NORMAL}
+        fill={node.highlight ? NODE_PINK_FILL : white}
+        stroke={NODE_PURPLE_STROKE}
         strokeWidth={1}
         onClick={collapseNode}
         cursor="pointer"
@@ -64,7 +89,8 @@ function ParentNode({ node, forceUpdate }) {
   );
 }
 
-function CollapsedNode({ node, forceUpdate }) {
+function CollapsedNode({ node, isCompact, forceUpdate }) {
+  // for normal size
   const width = 40;
   const height = 20;
   const centerX = -width / 2;
@@ -76,6 +102,28 @@ function CollapsedNode({ node, forceUpdate }) {
     forceUpdate();
   };
 
+  if (isCompact) {
+    return (
+      <Group top={node.x} left={node.y} cursor="pointer" onClick={expandNode}>
+        <circle
+          className="circle-node"
+          r={NODE_RADIUS_COMPACT}
+          fill={node.highlight ? NODE_PINK_FILL : NODE_VIOLET_FILL}
+        />
+        <text
+          dx="0.4rem"
+          dy="0.2rem"
+          fontSize={12}
+          fontFamily="Arial"
+          textAnchor="middle"
+          fill={node.highlight ? NODE_PINK_FILL : NODE_VIOLET_FILL}
+        >
+          {"»"}
+        </text>
+      </Group>
+    )
+  }
+
   return (
     <Group top={node.x} left={node.y}>
       <rect
@@ -84,8 +132,8 @@ function CollapsedNode({ node, forceUpdate }) {
         width={width}
         y={centerY}
         x={centerX}
-        fill={white}
-        stroke={lightpurple}
+        fill={node.highlight ? NODE_PINK_FILL : white}
+        stroke={NODE_PURPLE_STROKE}
         cursor="pointer"
         onClick={() => {
           expandNode();
@@ -108,14 +156,22 @@ function CollapsedNode({ node, forceUpdate }) {
   );
 }
 
-function LeafNode({ node }) {
+function LeafNode({ node, isCompact }) {
+  if (isCompact) {
+    return (
+      <Group top={node.x} left={node.y}>
+        <circle className="circle-node" r={NODE_RADIUS_COMPACT} fill={node.highlight ? NODE_PINK_FILL_DIMMED : NODE_GREY_FILL} />
+      </Group>
+    );
+  }
+
   return (
     <Group top={node.x} left={node.y}>
       <circle
         className="circle-node"
-        r={12}
-        fill={white}
-        stroke={lightpurple}
+        r={NODE_RADIUS_NORMAL}
+        fill={node.highlight ? NODE_PINK_FILL_DIMMED : white}
+        stroke={NODE_PURPLE_STROKE}
         strokeWidth={1}
         strokeDasharray="3,1"
         strokeOpacity={0.6}
@@ -134,18 +190,18 @@ function LeafNode({ node }) {
 }
 
 /** Handles rendering Root, Parent, and other Nodes. */
-function Node({ node, forceUpdate }) {
+function Node({ node, isCompact, forceUpdate }) {
   const isRoot = node.depth === 0;
   const isParent = !!(node.children || node._children);
 
-  if (isRoot) return <RootNode node={node} />;
+  if (isRoot) return <RootNode node={node} isCompact={isCompact} />;
   if (isParent)
     return node.children ? (
-      <ParentNode node={node} forceUpdate={forceUpdate} />
+      <ParentNode node={node} isCompact={isCompact} forceUpdate={forceUpdate} />
     ) : (
-      <CollapsedNode node={node} forceUpdate={forceUpdate} />
+      <CollapsedNode node={node} isCompact={isCompact} forceUpdate={forceUpdate} />
     );
-  return <LeafNode node={node} />;
+  return <LeafNode node={node} isCompact={isCompact} />;
 }
 
 const TreeGraph = ({ data, width, height }) => {
@@ -157,22 +213,63 @@ const TreeGraph = ({ data, width, height }) => {
 
   const margin = { top: 10, left: 80, right: 80, bottom: 10 };
 
-  const rewardFilter = (node) => {
-    if (!node.children || node.children.length === 0) return;
+  const [isCompact, setIsCompact] = useState(false);
 
-    // Find child nodes with their own children
+  // const [ zoomScale, setZoomScale ] = useState(4);
+  const [scale, setScale] = useState(1);
+  const minScale = 0.25;
+  const maxScale = 2;
+
+  const handleWheel = useCallback((event) => {
+    const { deltaY } = event;
+    setScale(prevScale => {
+      let newScale = prevScale - deltaY * 0.001;
+      return Math.min(Math.max(newScale, minScale), maxScale);
+    });
+  }, []);
+
+  const applyFilter = (node, pc) => {
+    if (!node.children || node.children.length === 0) return;
+    if (pc === "") pc = 50;
+
+    const { filterTarget, filterType } = options.treeOptions;
+
+    // Find non-leaf child nodes
     const nodesWithChildren = node.children.filter(
       (child) => child.children && child.children.length > 0
     );
-    // Sort based on reward
-    nodesWithChildren.sort((a, b) => a.data.attributes.reward - b.data.attributes.reward);
-    const midpoint = Math.floor(nodesWithChildren.length / 2);
 
-    const bottomHalf = nodesWithChildren.slice(0, midpoint);
-    const topHalf = nodesWithChildren.slice(midpoint);
+    // Sort based on target (reward or visits)
+    const nodesToFilter = (filterType === "collapse" ? nodesWithChildren : node.children).toSorted(
+      (a, b) => a.data.attributes[filterTarget] - b.data.attributes[filterTarget]
+    );
 
-    bottomHalf.forEach(collapseNode);
-    topHalf.forEach(rewardFilter);
+    const splitIndex = Math.ceil(nodesToFilter.length * (Number(pc) / 100));
+
+    const bottomHalf = nodesToFilter.slice(0, nodesToFilter.length - splitIndex);
+    const topHalf = nodesToFilter.slice(-splitIndex);
+
+    if (filterType === "highlight") {
+      topHalf.forEach(highlightNode);
+    }
+    else if (filterType === "collapse") {
+      bottomHalf.forEach(collapseNode);
+    }
+    topHalf.forEach((child) => applyFilter(child, pc));
+  };
+
+  const clearFilters = (node) => {
+    node.highlight = undefined;
+    if (node._children) {
+      node.children = node._children;
+      node._children = null;
+    }
+    if (!node.children || node.children.length === 0) return;
+    node.children.forEach(clearFilters);
+  };
+
+  const highlightNode = (node) => {
+    node.highlight = true;
   };
 
   const collapseNode = (node) => {
@@ -180,59 +277,74 @@ const TreeGraph = ({ data, width, height }) => {
     node.children = null;
   };
 
-  const { options, updateOptions } = useContext(OptionsContext);
+  const { options, updateOptions, setGraphTypeOption } = useContext(OptionsContext);
 
   useEffect(() => {
-    if (options.enableFilter) {
-      rewardFilter(treeData);
-      updateOptions({ enableFilter: false });
+    setIsCompact(options.treeOptions.size === "compact");
+  }, [options.treeOptions.size]);
+
+  useEffect(() => {
+    if (options.treeOptions.applyFilter) {
+      applyFilter(treeData, options.treeOptions.filterValue);
+      setGraphTypeOption("tree", "applyFilter", false);
+    } else if (options.treeOptions.clearFilters) {
+      clearFilters(treeData);
+      setGraphTypeOption("tree", "clearFilters", false);
     }
-  }, [options.enableFilter]);
+  }, [options.treeOptions.applyFilter, options.treeOptions.clearFilters]);
 
   return (
     <>
       {width > 0 && height > 0 && (
         <Drag width={width} height={height}>
           {({ dragStart, dragEnd, dragMove, isDragging, x, y, dx, dy }) => (
-            <svg width={width} height={height}>
+            <svg width={width} height={height} onWheel={handleWheel}>
               <defs>
                 <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
                   <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#aaaaaa" strokeWidth="0.5" />
                 </pattern>
               </defs>
-              <rect
-                width={width}
-                height={height}
-                fill="url(#grid)"
-                onMouseUp={dragEnd}
-                onMouseMove={dragMove}
-                onMouseDown={dragStart}
-                onMouseLeave={dragEnd}
-                cursor={isDragging ? "grabbing" : "grab"}
-              />
-              <Tree
-                root={treeData}
-                nodeSize={[30, 60]}
-                separation={(a, b) => {
-                  return a.parent === b.parent ? 1 : 1.5;
-                }}
-              >
-                {(tree) => (
-                  <Group top={margin.top + dy} left={margin.left + dx}>
-                    {tree.links().map((link, i) => (
-                      <LinkHorizontalStep
-                        key={`link-${i}`}
-                        data={link}
-                        stroke="#000000"
-                        fill="none"
-                      />
-                    ))}
-                    {tree.descendants().map((node, i) => (
-                      <Node key={`node-${i}`} node={node} forceUpdate={forceUpdate} />
-                    ))}
-                  </Group>
-                )}
-              </Tree>
+              <Group fill="url(#grid)" style={{ transform: `scale(${scale})` }}>
+                <rect
+                  width={width / scale}
+                  height={height / scale}
+                  onMouseUp={dragEnd}
+                  onMouseMove={dragMove}
+                  onMouseDown={dragStart}
+                  onMouseLeave={dragEnd}
+                  cursor={isDragging ? "grabbing" : "grab"}
+                />
+                <Tree
+                  root={treeData}
+                  nodeSize={isCompact ? [15, 30] : [30, 60]}
+                  separation={
+                    isCompact
+                      ? (a, b) => a.parent === b.parent ? 0.75 : 1.25
+                      : (a, b) => a.parent === b.parent ? 1 : 1.5
+                  }
+                >
+                  {(tree) => (
+                    <Group top={margin.top + dy} left={margin.left + dx}>
+                      {tree.links().map((link, i) => (
+                        <LinkHorizontalStep
+                          key={`link-${i}`}
+                          data={link}
+                          stroke="#000000"
+                          fill="none"
+                        />
+                      ))}
+                      {tree.descendants().map((node, i) => (
+                        <Node
+                          key={`node-${i}`}
+                          node={node}
+                          isCompact={isCompact}
+                          forceUpdate={forceUpdate}
+                        />
+                      ))}
+                    </Group>
+                  )}
+                </Tree>
+              </Group>
             </svg>
           )}
         </Drag>

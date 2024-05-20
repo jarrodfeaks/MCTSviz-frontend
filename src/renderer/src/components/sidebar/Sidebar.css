@@ -49,9 +49,77 @@
 
 .p-divider-horizontal {
   padding: 0.25rem 0;
-  margin: 0.5rem 0;
+  margin: 0.5rem 0 0.25rem 0;
 }
 
 .p-divider-horizontal:before {
   border-top-color: #AAAAAA;
+}
+
+.seed-group {
+  display: flex;
+  flex-direction: column;
+}
+
+#size {
+  line-height: 1;
+}
+
+#size .p-button-label {
+  font-size: 0.9rem;
+}
+
+.filter-options {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2rem;
+}
+
+.filter-label {
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+.filter-options .p-inputmask, .filter-options .p-dropdown {
+  height: 2rem;
+  font-size: 0.9rem;
+}
+
+.filter-options .p-dropdown-label {
+  height: 100%;
+  line-height: 0.8rem;
+  font-size: 0.9rem;
+}
+
+.filter-options .p-dropdown-trigger {
+  display: none;
+}
+
+.filter-menu-header {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.filter-menu-radio {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.filter-menu-clear {
+  font-size: 0.9rem;
+}
+
+.filter-menu-item > .p-menuitem-content {
+  background: #FFFFFF;
+}
+
+.filter-menu-item > .p-menuitem-content:hover {
+  background: #F0F0F0;
+}
+
+.filter-menu-header {
+  opacity: 1;
 }
