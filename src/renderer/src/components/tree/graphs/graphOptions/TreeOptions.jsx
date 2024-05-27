@@ -9,7 +9,7 @@ import OptionsContext from "../../../../OptionsContext";
 const TreeOptions = () => {
 
   const { options, setGraphTypeOption } = useContext(OptionsContext);
-
+  // the filter for tree graph
   const sizeOptions = [
     {
       name: "Compact",
@@ -31,7 +31,7 @@ const TreeOptions = () => {
       value: "visits"
     }
   ];
-
+  // applies the selected filter options to the template reander
   const applyFilterOptions = [
     {
       id: "filter-action",

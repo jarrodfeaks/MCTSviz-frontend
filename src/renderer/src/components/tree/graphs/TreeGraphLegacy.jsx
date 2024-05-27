@@ -17,6 +17,7 @@ const CustomNode = ({ nodeDatum, toggleNode, selectedNode, handleUpdateSelectedN
     handleUpdateSelectedNode(isSelected ? null : nodeDatum);
   };
 
+  // visulation changes resulting from on click
   return (
     <>
       <g onClick={handleNodeClick} onContextMenu={toggleNode}>
@@ -37,6 +38,7 @@ const TreeGraphLegacy = ({ data }) => {
   const [selectedNode, setSelectedNode] = useState(null);
   const [viewOrientation, setViewOrientation] = useState("horizontal");
 
+  // handles orientation of graph, default is horizontal
   const toggleViewOrientation = () => {
     setViewOrientation((currentOrientation) =>
       currentOrientation === "horizontal" ? "vertical" : "horizontal"
@@ -47,6 +49,7 @@ const TreeGraphLegacy = ({ data }) => {
     setSelectedNode(node);
   };
 
+  // styling for the tree and button
   return (
     <>
       <Tree
@@ -71,6 +74,7 @@ const TreeGraphLegacy = ({ data }) => {
         icon={IconRotate}
         onClick={toggleViewOrientation}
       />
+      {/* handling of selected node */}
       {selectedNode && (
         <Card className="overlay top-left" title="Selected Node Attributes">
           <TreeGraphLegacyInfoCard node={selectedNode} />

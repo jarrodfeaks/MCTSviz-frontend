@@ -25,13 +25,16 @@ function RadialGraph({ data, width, height }) {
   const hasChildren = (node) => node.data.children && node.data.children.length > 0;
 
   return width < 10 ? null : (
+    // zoom utilise the visx zoom libary on the width and hight to allow for zoom and draging
     <Zoom width={width} height={height} scaleXMin={0.5} scaleXMax={4} scaleYMin={0.5} scaleYMax={4}>
       {(zoom) => (
         <div style={{ position: 'relative' }}>
           <svg width={width} height={height} ref={zoom.containerRef} style={{ cursor: zoom.isDragging ? 'grabbing' : 'grab' }}>
             <LinearGradient id="links-gradient" from="#fd9b93" to="#fe6e9e" />
-            <rect width={width} height={height} fill="#272B4D" />
+            {/* Node colour and styling  */}
+            <rect width={width} height={height} fill="#272B4D" /> 
             <Group top={margin.top} left={margin.left}>
+              {/* tree handlys the hierarchal data in the expanding nodes */}
               <Tree root={hierarchy(data, (d) => (d.isExpanded ? null : d.children))} size={[sizeWidth, sizeHeight]} separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}>
                 {(tree) => (
                   <Group top={origin.y} left={origin.x} transform={zoom.toString()}>
@@ -78,6 +81,7 @@ function RadialGraph({ data, width, height }) {
                               }}
                             />
                           )}
+                          {/* default text value of node is the generation order */}
                           <text
                             dy=".33em"
                             fontSize={9}
@@ -95,6 +99,7 @@ function RadialGraph({ data, width, height }) {
                 )}
               </Tree>
             </Group>
+            {/* handles the click for draging */}
             <rect
               width={width}
               height={height}
@@ -108,15 +113,17 @@ function RadialGraph({ data, width, height }) {
               onMouseLeave={() => {
                 if (zoom.isDragging) zoom.dragEnd();
               }}
+              // Handles the double click for zooming, can also be done using scroll wheel
               onDoubleClick={(event) => {
                 const point = localPoint(event) || { x: 0, y: 0 };
                 zoom.scale({ scaleX: 1.1, scaleY: 1.1, point });
               }}
             />
           </svg>
+          {/* A button for centering the graph is below apart of the library but has not been included to date  */}
           {/* <div style={{ position: 'absolute', top: 10, left: 10 }}>
             <button onClick={zoom.center}>Center</button>
-          </div> */}
+          </div> */} 
         </div>
       )}
     </Zoom>

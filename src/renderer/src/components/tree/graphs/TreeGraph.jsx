@@ -17,6 +17,7 @@ const NODE_PINK_FILL = "#fe6e9e";
 const NODE_PINK_FILL_DIMMED = "#f9c5bb";
 const NODE_VIOLET_FILL = "#525AA3";
 
+/* creates root node of graph*/
 function RootNode({ node, isCompact }) {
   if (isCompact) {
     return (
@@ -42,14 +43,15 @@ function RootNode({ node, isCompact }) {
     </Group>
   );
 }
-
+/* parent node on graph are handeled */
 function ParentNode({ node, isCompact, forceUpdate }) {
+  // calls the function to collapse node hiding child nodes
   const collapseNode = () => {
     node._children = node.children;
     node.children = null;
     forceUpdate();
   };
-
+  // Styling for parent node in compact filter, reduces size and removes text
   if (isCompact) {
     return (
       <Group top={node.x} left={node.y}>
@@ -63,7 +65,7 @@ function ParentNode({ node, isCompact, forceUpdate }) {
       </Group>
     );
   }
-
+  /* Styling for parent node for defult normal display, handels text syteling as well*/
   return (
     <Group top={node.x} left={node.y}>
       <circle
@@ -88,7 +90,7 @@ function ParentNode({ node, isCompact, forceUpdate }) {
     </Group>
   );
 }
-
+/* function fpr the collapsed nodes, updates style*/
 function CollapsedNode({ node, isCompact, forceUpdate }) {
   // for normal size
   const width = 40;
@@ -155,7 +157,7 @@ function CollapsedNode({ node, isCompact, forceUpdate }) {
     </Group>
   );
 }
-
+/*styling for leaf nodes, has both compact and normal styling*/
 function LeafNode({ node, isCompact }) {
   if (isCompact) {
     return (
