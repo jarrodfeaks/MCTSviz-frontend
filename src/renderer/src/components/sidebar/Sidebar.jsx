@@ -33,11 +33,11 @@ const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
 
   const GraphControlComponent = graphControls[options.graphType];
 
+  // send API request to create a new tree
   const handleCreateTree = async () => {
     setIsCreatingTree(true);
     try {
       const res = await api.createTree(seed);
-      console.log(res);
       if (res.status === 200) onUpdateTree(res.data);
     } catch (err) {
       showToastMessage(
@@ -50,6 +50,7 @@ const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
     }
   };
 
+  // send request to iterate existing tree
   const handleIterateTree = async () => {
     updateOptions({ isLoading: true });
     try {

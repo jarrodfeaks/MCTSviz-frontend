@@ -10,6 +10,7 @@ const GraphView = ({ tree }) => {
   const containerRef = useRef(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
 
+  // used to dynamically calculate size of canvas
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
       if (!entries || entries.length === 0) {

@@ -31,7 +31,7 @@ const TreeOptions = () => {
       value: "visits"
     }
   ];
-  // applies the selected filter options to the template reander
+  // options for the "apply filter" dropdown
   const applyFilterOptions = [
     {
       id: "filter-action",
@@ -59,6 +59,7 @@ const TreeOptions = () => {
     }
   ];
 
+  // renders labels for the dropdown options
   const renderOption = (item) => {
     return (
       <div className="p-menuitem-content" onClick={(e) => handleFilterMenuClick(e, item)}>

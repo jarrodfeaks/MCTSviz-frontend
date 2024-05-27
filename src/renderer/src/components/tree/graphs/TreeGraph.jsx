@@ -217,7 +217,6 @@ const TreeGraph = ({ data, width, height }) => {
 
   const [isCompact, setIsCompact] = useState(false);
 
-  // const [ zoomScale, setZoomScale ] = useState(4);
   const [scale, setScale] = useState(1);
   const minScale = 0.25;
   const maxScale = 2;
