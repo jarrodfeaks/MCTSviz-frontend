@@ -134,7 +134,7 @@ const TreeOptions = () => {
             }}
             mask="99%"
             unmask={true}
-            size={1}
+            size={3}
             placeholder="50%"
           />
         </div>

@@ -37,7 +37,7 @@ function RootNode({ node, isCompact }) {
         style={{ pointerEvents: "none" }}
         fill={white}
       >
-        {node.data.attributes.reward}
+        {node.data.attributes.reward.toFixed(1)}
       </text>
     </Group>
   );
@@ -83,7 +83,7 @@ function ParentNode({ node, isCompact, forceUpdate }) {
         style={{ pointerEvents: "none" }}
         fill="#000000"
       >
-        {node.data.attributes.reward}
+        {node.data.attributes.reward.toFixed(1)}
       </text>
     </Group>
   );
@@ -147,7 +147,7 @@ function CollapsedNode({ node, isCompact, forceUpdate }) {
         style={{ pointerEvents: "none" }}
         fill={"#000000"}
       >
-        {node.data.attributes.reward}
+        {node.data.attributes.reward.toFixed(1)}
         <tspan dx={2} dy={1} fontSize={14}>
           {"»"}
         </tspan>
@@ -183,7 +183,7 @@ function LeafNode({ node, isCompact }) {
         style={{ pointerEvents: "none" }}
         fill="#000000"
       >
-        {node.data.attributes.reward}
+        {node.data.attributes.reward.toFixed(1)}
       </text>
     </Group>
   );

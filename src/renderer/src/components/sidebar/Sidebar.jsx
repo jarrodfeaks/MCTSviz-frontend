@@ -37,6 +37,7 @@ const Sidebar = ({ onUpdateTree, showToastMessage, isTreeCreated }) => {
     setIsCreatingTree(true);
     try {
       const res = await api.createTree(seed);
+      console.log(res);
       if (res.status === 200) onUpdateTree(res.data);
     } catch (err) {
       showToastMessage(
